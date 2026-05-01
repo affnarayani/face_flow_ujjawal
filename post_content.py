@@ -241,6 +241,12 @@ def run():
         print("[STEP] Clicking Post...", flush=True)
         time.sleep(random.randint(6, 12))
 
+        btn = page.get_by_role("button", name="Not now")
+        if btn.count(): 
+            btn.first.click()
+            print("[STEP] Clicking No WhatsApp...", flush=True)
+            time.sleep(random.randint(6, 12))
+
         print("✅ Posted successfully!", flush=True)
 
         # save
