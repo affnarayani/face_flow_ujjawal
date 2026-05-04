@@ -1,4 +1,4 @@
-name: Facebook Bot Runner
+name: Advocate Post
 
 on:
   schedule:
