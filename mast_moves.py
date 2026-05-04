@@ -168,10 +168,29 @@ def process_channel(channel_url, page):
 def run_scraper():
     global remaining_channels
 
-    print("[STEP] Starting Scraper...", flush=True)
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=HEADLESS)
-        context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    print("[STEP] Starting Scraper with Stealth...", flush=True)
+    
+    # 1. Stealth setup
+    stealth = Stealth()
+    
+    # 2. Playwright ko stealth ke saath wrap karein
+    pw_cm = stealth.use_sync(sync_playwright())
+    p = pw_cm.__enter__()
+
+    try:
+        # Browser launch with specific args for better stealth
+        browser = p.chromium.launch(
+            headless=HEADLESS,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox"
+            ]
+        )
+        
+        context = browser.new_context(
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        )
+        
         page = context.new_page()
 
         while remaining_channels:
@@ -181,11 +200,22 @@ def run_scraper():
             video_link = process_channel(channel_url, page)
             if video_link:
                 browser.close()
-                return video_link # Found a video, stop and return it
+                return video_link 
 
         browser.close()
         print("\n🚫 All channels scanned. No new downloadable videos found.", flush=True)
         return None
+
+    except Exception as e:
+        print(f"[ERROR in Scraper] {e}", flush=True)
+        return None
+        
+    finally:
+        # Context manager ko safely exit karein
+        try:
+            pw_cm.__exit__(None, None, None)
+        except:
+            pass
 
 
 # =========================
