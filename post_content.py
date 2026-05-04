@@ -114,7 +114,7 @@ def rewrite_with_hf(text):
         f"- End with a thought-provoking question\n"
         f"- Use clear, professional, SEO-friendly language\n"
         f"- Do NOT use symbols like * or **\n"
-        f"- IMPORTANT: Add 3–5 relevant hashtags on a new line at the end\n"
+        f"- IMPORTANT: Add 5–10 relevant hashtags on a new line at the end\n"
         f"- No extra commentary or headings\n"
         f"Content: {text}"
     )
