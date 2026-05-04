@@ -164,18 +164,43 @@ def process_channel(channel_url, page):
 
     return None
 
+def parse_netscape_cookies(file_path):
+    """Netscape/txt cookies ko Playwright JSON format mein convert karta hai"""
+    cookies = []
+    if not os.path.exists(file_path):
+        return cookies
+    
+    with open(file_path, 'r') as f:
+        for line in f:
+            if line.startswith('#') or not line.strip():
+                continue
+            cols = line.strip().split('\t')
+            if len(cols) < 7:
+                continue
+            
+            # Netscape columns: domain, flag, path, secure, expiration, name, value
+            cookie = {
+                "domain": cols[0],
+                "path": cols[2],
+                "secure": cols[3].upper() == "TRUE",
+                "name": cols[5],
+                "value": cols[6],
+                "sameSite": "Lax" # Default for safety
+            }
+            cookies.append(cookie)
+    return cookies
+
 def run_scraper():
-    print("[STEP] Starting Scraper with Stealth & Cookies...", flush=True)
+    print("[STEP] Starting Scraper with Stealth & Netscape Cookies...", flush=True)
+    
+    # Aapki file ka sahi naam yahan check karein
+    YT_COOKIES_TXT = "yt_cookies.txt" 
     
     if os.path.exists(CHANNEL_FILE):
         with open(CHANNEL_FILE, "r") as f:
             remaining_channels = [line.strip() for line in f if line.strip()]
     else:
         print("❌ Error: channels.txt missing!", flush=True)
-        return None
-
-    if not remaining_channels:
-        print("❌ Error: channels.txt is empty!", flush=True)
         return None
 
     stealth = Stealth()
@@ -186,12 +211,15 @@ def run_scraper():
         browser = p.chromium.launch(headless=HEADLESS, args=["--disable-blink-features=AutomationControlled"])
         context = browser.new_context(user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
-        if os.path.exists(YT_COOKIES_FILE):
-            print(f"[STEP] Loading YT cookies from {YT_COOKIES_FILE}...", flush=True)
-            with open(YT_COOKIES_FILE, 'r') as f:
-                raw_yt_cookies = json.load(f)
-                context.add_cookies(clean_cookies_for_playwright(raw_yt_cookies))
-            print("[OK] YouTube cookies injected.", flush=True)
+        # Netscape Cookies Load Karein
+        if os.path.exists(YT_COOKIES_TXT):
+            print(f"[STEP] Parsing Netscape cookies from {YT_COOKIES_TXT}...", flush=True)
+            netscape_cookies = parse_netscape_cookies(YT_COOKIES_TXT)
+            if netscape_cookies:
+                context.add_cookies(netscape_cookies)
+                print(f"[OK] {len(netscape_cookies)} cookies injected into Playwright.", flush=True)
+        else:
+            print("[⚠️] yt_cookies.txt not found, running without login.", flush=True)
 
         page = context.new_page()
 
@@ -205,7 +233,6 @@ def run_scraper():
                 return target_link
 
         browser.close()
-        print("\n🚫 All channels scanned. Nothing new.", flush=True)
         return None
     finally:
         try: pw_cm.__exit__(None, None, None)
