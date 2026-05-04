@@ -18,7 +18,7 @@ import shutil
 # ================= CONFIG =================
 HEADLESS = True
 FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
-YT_COOKIES_FILE = "yt_cookies.json"
+YT_COOKIES_FILE = "yt_cookies.txt"
 CHANNEL_FILE = "channels.txt"
 POSTED_FILE = "posted_reels.json"
 TEMP_DIR = Path("temp")
