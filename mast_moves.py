@@ -16,7 +16,7 @@ from playwright_stealth import Stealth
 import shutil
 
 # ================= CONFIG =================
-HEADLESS = False
+HEADLESS = True
 FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
 YT_COOKIES_FILE = "yt_cookies.json"
 CHANNEL_FILE = "channels.txt"
