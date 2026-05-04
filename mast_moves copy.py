@@ -63,14 +63,13 @@ remaining_channels = all_channels.copy()
 # ================= DOWNLOAD =================
 def download_video(video_url):
     print(f"⬇️ Attempting Download: {video_url}", flush=True)
-    yt_cookie_path = "yt_cookies.json"
+
     ydl_opts = {
         'format': 'best[ext=mp4]/best',
         'outtmpl': f'{TEMP_DIR}/%(id)s.%(ext)s',
         'quiet': True,
         'no_warnings': True,
         'noplaylist': True,
-        'cookiefile': yt_cookie_path if os.path.exists(yt_cookie_path) else None, # yt-dlp uses this
     }
 
     try:
@@ -89,7 +88,6 @@ def download_video(video_url):
                 'format': 'bestvideo+bestaudio/best',
                 'merge_output_format': 'mp4',
                 'outtmpl': f'{TEMP_DIR}/%(id)s.%(ext)s',
-                'cookiefile': yt_cookie_path if os.path.exists(yt_cookie_path) else None,
                 'postprocessor_args': ['-avoid_negative_ts', 'make_zero', '-fflags', '+genpts'],
                 'quiet': True,
                 'no_warnings': True,
@@ -169,7 +167,7 @@ def process_channel(channel_url, page):
 # ================= CORE LOGIC =================
 def run_scraper():
     global remaining_channels
-    yt_cookie_file = "yt_cookies.json"
+
     print("[STEP] Starting Scraper with Stealth...", flush=True)
     
     # 1. Stealth setup
@@ -192,15 +190,7 @@ def run_scraper():
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         )
-        # Loading YouTube Cookies into Playwright
-        if os.path.exists(yt_cookie_file):
-            print(f"[STEP] Loading YouTube cookies from {yt_cookie_file}...", flush=True)
-            with open(yt_cookie_file, 'r') as f:
-                yt_cookies = json.load(f)
-                context.add_cookies(yt_cookies)
-            print("[OK] YouTube cookies injected into browser.", flush=True)
-        else:
-            print("[⚠️] yt_cookies.json not found, running without login.", flush=True)
+        
         page = context.new_page()
 
         while remaining_channels:
