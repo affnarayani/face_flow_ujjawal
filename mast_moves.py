@@ -191,7 +191,7 @@ def run():
         print("[STEP] Clicking final 'Post' button...", flush=True)
         page.get_by_role("button", name="Post", exact=True).last.click()
         
-        print("[STEP] Waiting for post confirmation (25s)...", flush=True)
+        print("[STEP] Waiting for post confirmation...", flush=True)
         time.sleep(random.randint(30, 60))
 
         # Handle popups
