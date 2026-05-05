@@ -131,7 +131,7 @@ def run():
 
         print("[STEP] Navigating to Facebook target URL...", flush=True)
         page.goto("https://www.facebook.com/mastmoves")
-        time.sleep(random.randint(3, 6))
+        time.sleep(random.randint(15, 30))
 
         # Profile Switching Logic
         try:
