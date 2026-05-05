@@ -13,6 +13,8 @@ env:
 jobs:
   run-bot:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       # =========================
@@ -22,7 +24,6 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }} # Pushing ke liye PAT zaroori ho sakta hai
 
       # =========================
       # 2. SETUP PYTHON
@@ -39,7 +40,6 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install playwright playwright-stealth cryptography python-dotenv requests
-          # Agar requirements.txt hai toh: pip install -r requirements.txt
 
       - name: Install Playwright Chromium
         run: |
@@ -61,13 +61,18 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Saari changes add karein (Specifically deleted videos from mast_moves/)
+          # Sirf mast_moves folder ke deletions stage karein
           git add mast_moves/
           
-          # Agar posted_content.json abhi bhi use ho raha hai toh usse bhi add karein
-          if [ -f "posted_content.json" ]; then
-            git add posted_content.json
+          # Check karein agar koi video delete hui hai
+          if ! git diff --cached --quiet; then
+            git commit -m "Post successful: Video removed [auto]"
+            
+            # Latest changes pull karein (Conflict avoid karne ke liye)
+            git pull --rebase origin main
+            
+            # Push changes
+            git push origin main
+          else
+            echo "No changes detected (No video was deleted). Skipping push."
           fi
-
-          # Change check karein aur commit karein
-          git diff --cached --quiet || (git commit -m "Post successful: Video removed [auto]" && git push)
