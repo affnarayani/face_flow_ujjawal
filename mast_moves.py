@@ -19,7 +19,7 @@ from playwright_stealth import Stealth  # ✅ REQUIRED (UNTOUCHED)
 # =========================
 # CONFIG
 # =========================
-HEADLESS = False
+HEADLESS = True
 FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
 VIDEO_FOLDER = Path("mast_moves")
 PBKDF2_ITERATIONS = 200_000
