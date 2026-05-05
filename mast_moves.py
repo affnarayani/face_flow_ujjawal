@@ -19,7 +19,7 @@ from playwright_stealth import Stealth  # ✅ REQUIRED (UNTOUCHED)
 # =========================
 # CONFIG
 # =========================
-HEADLESS = True
+HEADLESS = False
 FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
 VIDEO_FOLDER = Path("mast_moves")
 PBKDF2_ITERATIONS = 200_000
@@ -165,7 +165,7 @@ def run():
         fc.value.set_files(str(video_path))
 
         print("[STEP] Video is uploading.", flush=True)
-        time.sleep(random.randint(15, 30))
+        time.sleep(random.randint(90, 180))
 
         print("[STEP] Clicking 'Next'...", flush=True)
         page.get_by_role("button", name="Next").click()
