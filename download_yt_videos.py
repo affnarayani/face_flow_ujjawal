@@ -5,7 +5,7 @@ from playwright_stealth import Stealth
 
 # ================= CONFIG =================
 CHANNEL_URL = "https://www.youtube.com/@MigEndTwist/shorts"
-DOWNLOAD_FOLDER = "mast_moves"
+DOWNLOAD_FOLDER = "temp"
 HEADLESS = True
 
 # 1. Folder create karna
