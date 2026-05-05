@@ -165,7 +165,7 @@ def run():
         fc.value.set_files(str(video_path))
 
         print("[STEP] Video is uploading.", flush=True)
-        time.sleep(random.randint(180, 300))
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Clicking 'Next'...", flush=True)
         page.get_by_role("button", name="Next").click()
@@ -177,7 +177,7 @@ def run():
 
         print("[STEP] Adding hashtags manually for human-like behavior...", flush=True)
         tags_box = page.get_by_role("textbox", name="Add tags")
-        tags_text = "viral,trending,video,masti,dancevibes,explorepage,reelsindia,foryou,dailymasti,viralreels,trendingnow,desienergy,nonstopdance,watchagain,entertainment,instatrend,bestdance,hotperformance,desiswag,killermoves,"
+        tags_text = "viral,trending,dancevibes,reelsindia,desienergy,explorepage,"
         for char in tags_text:
             tags_box.type(char)
             time.sleep(random.uniform(0.05, 0.3))
