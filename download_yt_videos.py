@@ -1,4 +1,5 @@
 import os
+import sys
 from playwright.sync_api import sync_playwright
 from yt_dlp import YoutubeDL
 from playwright_stealth import Stealth
@@ -7,6 +8,10 @@ from playwright_stealth import Stealth
 CHANNEL_URL = "https://www.youtube.com/@MigEndTwist/shorts"
 DOWNLOAD_FOLDER = "temp"
 HEADLESS = True
+
+with open("channels.txt", "r") as f:
+    if any(CHANNEL_URL == line.strip() for line in f):
+        sys.exit("Channel already exists.")
 
 # 1. Folder create karna
 if not os.path.exists(DOWNLOAD_FOLDER):
