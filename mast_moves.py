@@ -139,17 +139,23 @@ def run():
             if switch_btn.is_visible():
                 print("[STEP] Profile switch prompt found. Clicking 'Switch Now'...", flush=True)
                 switch_btn.click()
-                time.sleep(5)
+                time.sleep(random.randint(15, 30))
         except:
             print("[INFO] No profile switch required", flush=True)
 
         print("[STEP] Opening the create post dialog...", flush=True)
         page.get_by_role("button", name="What's on your mind?").click()
-        time.sleep(random.randint(4, 7))
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Typing post caption...", flush=True)
         page.get_by_role("paragraph").click()
-        page.keyboard.type("Enjoy this video")
+        page.keyboard.type("""
+        Mast moves aur killer performance. Kaun kaun ise repeat mode par dekh raha hai? Apna favourite part comment mein batayein.
+
+        #DanceIndia #TrendingReels #MastMoves #DesiDance #DanceVideo #ViralDance #ReelsIndia #DanceChallenge #IndianDancers #DesiSwag #ReelItFeelIt #DanceVibes
+        """)
+
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Opening file picker...", flush=True)
         with page.expect_file_chooser() as fc:
@@ -158,35 +164,35 @@ def run():
         print(f"[STEP] Uploading: {video_path.name}", flush=True)
         fc.value.set_files(str(video_path))
 
-        print("[STEP] Video is uploading. Waiting 30s for processing...", flush=True)
-        time.sleep(30) 
+        print("[STEP] Video is uploading.", flush=True)
+        time.sleep(random.randint(180, 300))
 
         print("[STEP] Clicking 'Next'...", flush=True)
         page.get_by_role("button", name="Next").click()
-        time.sleep(15)
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Entering Reel details...", flush=True)
-        page.get_by_role("textbox", name="Reel title").fill("Watch this")
-        time.sleep(5)
+        page.get_by_role("textbox", name="Reel title").fill("Bet You Can't Watch Just Once")
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Adding hashtags manually for human-like behavior...", flush=True)
         tags_box = page.get_by_role("textbox", name="Add tags")
-        tags_text = "viral,trending,video,masti,"
+        tags_text = "viral,trending,video,masti,dancevibes,explorepage,reelsindia,foryou,dailymasti,viralreels,trendingnow,desienergy,nonstopdance,watchagain,entertainment,instatrend,bestdance,hotperformance,desiswag,killermoves,"
         for char in tags_text:
             tags_box.type(char)
-            time.sleep(random.uniform(0.05, 0.2))
+            time.sleep(random.uniform(0.05, 0.3))
 
-        time.sleep(10)
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Clicking 'Next' for final stage...", flush=True)
         page.get_by_role("button", name="Next").click()
-        time.sleep(15)
+        time.sleep(random.randint(15, 30))
 
         print("[STEP] Clicking final 'Post' button...", flush=True)
         page.get_by_role("button", name="Post", exact=True).last.click()
         
         print("[STEP] Waiting for post confirmation (25s)...", flush=True)
-        time.sleep(25)
+        time.sleep(random.randint(30, 60))
 
         # Handle popups
         try:
@@ -194,6 +200,7 @@ def run():
             if not_now.is_visible():
                 print("[STEP] Dismissing WhatsApp prompt...", flush=True)
                 not_now.click()
+                time.sleep(random.randint(30, 60))
         except:
             pass
 

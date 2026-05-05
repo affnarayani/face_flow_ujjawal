@@ -2,7 +2,9 @@ name: Mast Moves Post
 
 on:
   schedule:
-    - cron: "30 3 * * *"   # 9:00 AM IST
+    - cron: "30 4 * * *"   # IST 10:00 AM
+    - cron: "30 10 * * *"  # IST 04:00 PM
+    - cron: "30 16 * * *"  # IST 10:00 PM
   workflow_dispatch:
 
 env:
