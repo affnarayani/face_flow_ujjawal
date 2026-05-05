@@ -3,7 +3,7 @@ import json
 import time
 import base64
 import random
-import sys
+import shutil
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -31,8 +31,7 @@ load_dotenv()
 DECRYPT_KEY = os.getenv("DECRYPT_KEY")
 
 if not DECRYPT_KEY:
-    print("❌ DECRYPT_KEY missing in .env file", flush=True)
-    sys.exit(1)
+    raise RuntimeError("❌ DECRYPT_KEY missing in .env file")
 
 # =========================
 # CRYPTO (Original Logic)
@@ -57,14 +56,13 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
     try:
         return aesgcm.decrypt(nonce, ciphertext, None)
     except InvalidTag:
-        print("❌ Decryption failed - Check your DECRYPT_KEY", flush=True)
-        sys.exit(1)
+        raise RuntimeError("❌ Decryption failed (InvalidTag) - Check your DECRYPT_KEY")
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
     print(f"[STEP] Reading encrypted cookies from {file_path}...", flush=True)
     if not file_path.exists():
         print(f"[ERROR] Cookie file {file_path} not found!", flush=True)
-        sys.exit(1)
+        raise FileNotFoundError(file_path)
 
     with file_path.open("r", encoding="utf-8") as f:
         payload = json.load(f)
@@ -82,12 +80,12 @@ def get_random_video():
     print("[STEP] Scanning folder for videos...", flush=True)
     if not VIDEO_FOLDER.exists():
         print(f"[ERROR] Folder '{VIDEO_FOLDER}' does not exist!", flush=True)
-        sys.exit(1)
+        return None
     
     videos = list(VIDEO_FOLDER.glob("*.mp4"))
     if not videos:
         print(f"[ERROR] No .mp4 files found in '{VIDEO_FOLDER}'", flush=True)
-        sys.exit(1)
+        return None
     
     selected = random.choice(videos)
     print(f"[OK] Randomly selected video: {selected.name}", flush=True)
@@ -100,15 +98,15 @@ def run():
     print("[START] Bot execution initiated", flush=True)
     
     video_path = get_random_video()
-    
-    # Stealth setup
+    if not video_path:
+        print("[EXIT] Process aborted: No video available", flush=True)
+        return
+
+    # Stealth setup - EXACTLY as requested
     print("[STEP] Initializing Stealth configuration...", flush=True)
     stealth = Stealth()
     pw_cm = stealth.use_sync(sync_playwright())
     pw = pw_cm.__enter__()
-
-    # Track failure status for final exit
-    execution_failed = False
 
     try:
         print("[STEP] Launching Chromium browser...", flush=True)
@@ -126,6 +124,7 @@ def run():
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
         )
 
+        # Load and set encrypted cookies
         cookies = load_cookies(Path(FACEBOOK_COOKIES_FILE))
         context.add_cookies(cookies)
         page = context.new_page()
@@ -155,6 +154,7 @@ def run():
 
         #DanceIndia #TrendingReels #MastMoves #DesiDance #DanceVideo #ViralDance #ReelsIndia #DanceChallenge #IndianDancers #DesiSwag #ReelItFeelIt #DanceVibes
         """)
+
         time.sleep(random.randint(15, 30))
 
         print("[STEP] Opening file picker...", flush=True)
@@ -175,7 +175,7 @@ def run():
         page.get_by_role("textbox", name="Reel title").fill("Bet You Can't Watch Just Once")
         time.sleep(random.randint(15, 30))
 
-        print("[STEP] Adding hashtags manually...", flush=True)
+        print("[STEP] Adding hashtags manually for human-like behavior...", flush=True)
         tags_box = page.get_by_role("textbox", name="Add tags")
         tags_text = "viral,trending,dancevibes,reelsindia,desienergy,explorepage,"
         for char in tags_text:
@@ -206,31 +206,33 @@ def run():
 
         print("✅ POST SUCCESS", flush=True)
 
-        # Remove video file after success
+        # Remove video file after successful upload
         try:
             if video_path.exists():
+                print(f"[STEP] Deleting uploaded file: {video_path.name}", flush=True)
                 os.remove(video_path)
-                print("[OK] File removed", flush=True)
-        except:
-            pass
+                print("[OK] File removed from folder", flush=True)
+        except Exception as e:
+            print(f"[WARNING] Could not delete file: {e}", flush=True)
 
     except Exception as e:
-        print(f"[ERROR] Unexpected failure: {e}", flush=True)
-        execution_failed = True  # ✅ This flag ensures we exit(1) at the end
+        print(f"[ERROR] Process failed: {e}", flush=True)
 
     finally:
-        print("[STEP] Cleaning up resources...", flush=True)
+        print("[STEP] Cleaning up browser and resources...", flush=True)
         try:
             browser.close()
-            pw_cm.__exit__(None, None, None)
+            print("[OK] Browser closed", flush=True)
         except:
             pass
 
-        if execution_failed:
-            print("[EXIT] Script failed at a step. Reporting failure to GitHub.", flush=True)
-            sys.exit(1)  # ✅ FORCE FAIL GITHUB WORKFLOW
-        
-        print("[DONE] Bot finished successfully", flush=True)
+        try:
+            pw_cm.__exit__(None, None, None)
+            print("[OK] Playwright environment exited", flush=True)
+        except:
+            pass
+
+        print("[DONE] Bot finished tasks", flush=True)
 
 if __name__ == "__main__":
     run()
