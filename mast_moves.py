@@ -20,7 +20,8 @@ from playwright_stealth import Stealth  # ✅ REQUIRED (UNTOUCHED)
 # CONFIG
 # =========================
 HEADLESS = True
-FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
+FACEBOOK_COOKIES_FILE = "fb_cookies.json.encrypted"
+VIDEO_JSON_FILE = Path("video.json")
 VIDEO_FOLDER = Path("mast_moves")
 PBKDF2_ITERATIONS = 200_000
 
@@ -76,22 +77,32 @@ def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
     return cookies
 
 # =========================
-# UTILS
+# JSON DATA LOAD & UTILS
 # =========================
-def get_random_video():
-    print("[STEP] Scanning folder for videos...", flush=True)
+def load_video_metadata():
+    print(f"[STEP] Reading metadata from {VIDEO_JSON_FILE}...", flush=True)
+    if not VIDEO_JSON_FILE.exists():
+        print(f"[ERROR] JSON file '{VIDEO_JSON_FILE}' does not exist!", flush=True)
+        sys.exit(1)
+        
+    with VIDEO_JSON_FILE.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+    print("[OK] Video metadata loaded successfully", flush=True)
+    return data
+
+def get_json_video(filename: str):
+    print(f"[STEP] Searching for file '{filename}' in '{VIDEO_FOLDER}'...", flush=True)
     if not VIDEO_FOLDER.exists():
         print(f"[ERROR] Folder '{VIDEO_FOLDER}' does not exist!", flush=True)
         sys.exit(1)
     
-    videos = list(VIDEO_FOLDER.glob("*.mp4"))
-    if not videos:
-        print(f"[ERROR] No .mp4 files found in '{VIDEO_FOLDER}'", flush=True)
+    video_path = VIDEO_FOLDER / filename
+    if not video_path.exists():
+        print(f"[ERROR] Video file '{filename}' not found in '{VIDEO_FOLDER}' folder!", flush=True)
         sys.exit(1)
     
-    selected = random.choice(videos)
-    print(f"[OK] Randomly selected video: {selected.name}", flush=True)
-    return selected
+    print(f"[OK] Video file verified: {video_path.name}", flush=True)
+    return video_path
 
 # =========================
 # FACEBOOK BOT
@@ -99,12 +110,26 @@ def get_random_video():
 def run():
     print("[START] Bot execution initiated", flush=True)
     
-    video_path = get_random_video()
+    # JSON data load karein
+    video_data = load_video_metadata()
+    
+    # JSON se specifics extract karein
+    target_filename = video_data.get("filename")
+    post_title = video_data.get("title", "")
+    post_keywords = video_data.get("keyword", "") # comma separated keywords
+
+    # Description fetch karein aur ensure karein ki end mein space ho
+    post_description = video_data.get("description", "")
+    if post_description and not post_description.endswith(" "):
+        post_description += " "  # ✅ Code se dynamically last mein space add kar diya
+
+    # Video select karein
+    video_path = get_json_video(target_filename)
     
     # Stealth setup
     print("[STEP] Initializing Stealth configuration...", flush=True)
-    stealth = Stealth()
-    pw_cm = stealth.use_sync(sync_playwright())
+    clear_stealth = Stealth()
+    pw_cm = clear_stealth.use_sync(sync_playwright())
     pw = pw_cm.__enter__()
 
     # Track failure status for final exit
@@ -150,11 +175,9 @@ def run():
 
         print("[STEP] Typing post caption...", flush=True)
         page.get_by_role("paragraph").click()
-        page.keyboard.type("""
-        Mast moves aur killer performance. Kaun kaun ise repeat mode par dekh raha hai? Apna favourite part comment mein batayein.
-
-        #DanceIndia #TrendingReels #MastMoves #DesiDance #DanceVideo #ViralDance #ReelsIndia #DanceChallenge #IndianDancers #DesiSwag #ReelItFeelIt #DanceVibes
-        """)
+        
+        # Space-adjusted description yahan type hoga
+        page.keyboard.type(post_description)
         time.sleep(random.randint(15, 30))
 
         print("[STEP] Opening file picker...", flush=True)
@@ -172,12 +195,16 @@ def run():
         time.sleep(random.randint(15, 30))
 
         print("[STEP] Entering Reel details...", flush=True)
-        page.get_by_role("textbox", name="Reel title").fill("Bet You Can't Watch Just Once")
+        page.get_by_role("textbox", name="Reel title").fill(post_title)
         time.sleep(random.randint(15, 30))
 
         print("[STEP] Adding hashtags manually...", flush=True)
         tags_box = page.get_by_role("textbox", name="Add tags")
-        tags_text = "viral,trending,dancevibes,reelsindia,desienergy,explorepage,"
+        
+        tags_text = post_keywords
+        if tags_text and not tags_text.endswith(','):
+            tags_text += ','
+            
         for char in tags_text:
             tags_box.type(char)
             time.sleep(random.uniform(0.05, 0.3))
