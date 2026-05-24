@@ -195,7 +195,7 @@ def run():
             page.locator("input[type='file']").set_input_files(str(selected_video.resolve()))
             print("[OK] File uploaded via fallback input method", flush=True)
 
-        custom_random_wait(15, 30)
+        custom_random_wait(30, 60)
 
         # 6. Text input field mein strict prompt fill karna
         print("[STEP] Inputting upgraded strict prompt into chat box...", flush=True)
