@@ -46,27 +46,35 @@ jobs:
           python -m playwright install chromium
 
       # =========================
-      # 4. RUN BOT
+      # 4. GENERATE VIDEO DETAILS (GROK BOT)
       # =========================
-      - name: Run bot
+      - name: Generate Video Details
+        env:
+          DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
+        run: python get_video_details.py
+
+      # =========================
+      # 5. RUN FACEBOOK BOT
+      # =========================
+      - name: Run Facebook Bot
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
         run: python mast_moves.py
 
       # =========================
-      # 5. COMMIT & PUSH CHANGES
+      # 6. COMMIT & PUSH CHANGES
       # =========================
       - name: Commit & Push updates
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Sirf mast_moves folder ke deletions stage karein
-          git add mast_moves/
+          # mast_moves folder ke deletions aur updated video.json dono ko stage karein
+          git add mast_moves/ video.json
           
-          # Check karein agar koi video delete hui hai
+          # Check karein agar koi changes detect huye hain
           if ! git diff --cached --quiet; then
-            git commit -m "Post successful: Video removed [auto]"
+            git commit -m "Post successful: Video processed and removed [auto]"
             
             # Latest changes pull karein (Conflict avoid karne ke liye)
             git pull --rebase origin main
@@ -74,5 +82,5 @@ jobs:
             # Push changes
             git push origin main
           else
-            echo "No changes detected (No video was deleted). Skipping push."
+            echo "No changes detected. Skipping push."
           fi
