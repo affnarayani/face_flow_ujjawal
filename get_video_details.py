@@ -4,6 +4,7 @@ import time
 import base64
 import random
 import shutil
+import sys
 import requests
 from pathlib import Path
 from typing import List, Dict, Any
@@ -202,34 +203,54 @@ def run():
         chat_input = page.get_by_test_id("chat-input").get_by_role("paragraph")
         
         prompt_text = (
-            "Analyze this video and provide a proper 'title', 'description', and 'keyword'. "
+            "Analyze this video and provide a highly engaging, catchy, and curiosity-driven 'title', 'description', and 'keyword' optimized for Facebook. "
             "STRICTLY follow these formatting and content rules:\n"
             "1. Output MUST be rendered inside a valid markdown code block (code editor format) starting with ```json.\n"
             "2. The structure must ONLY and STRICTLY contain three JSON keys: 'title', 'description', and 'keyword'.\n"
-            "3. Inside the 'description' value, you MUST include 6 to 12 relevant hashtags. Each hashtag MUST strictly start with the '#' symbol (e.g., #example). These hashtags must appear directly at the very end of the description prose without any labels, introductions, or intermediate phrases.\n"
+            "3. Inside the 'description' value, you MUST STRICTLY include 6 to 12 relevant hashtags. Each hashtag MUST strictly start with the '#' symbol (e.g., #example). These hashtags must appear directly at the very end of the description prose without any labels, introductions, or intermediate phrases.\n"
             "4. The 'keyword' key value MUST strictly contain exactly 5 plain text keywords, separated by a comma WITHOUT any space between the comma and the next keyword (e.g., \"word1,word2,word3,word4,word5\").\n"
             "5. STRICTLY DO NOT use the '#' symbol or any hashtags inside the 'keyword' value. It must be pure text only.\n"
-            "6. STRICTLY DO NOT INCLUDE ANY EMOJIS anywhere in the title, description, hashtags, or keywords. Keep the text entirely plain-text and professional.\n"
-            "7. No pre-text, no conversational intro, no post-text outside the code block. Just pure JSON output enclosed in a code block."
+            "6. STRICTLY DO NOT INCLUDE ANY EMOJIS anywhere in the title, description, hashtags, or keywords. Keep the text entirely plain-text.\n"
+            "7. No pre-text, no conversational intro, no post-text outside the code block. Just pure JSON output enclosed in a code block.\n"
+            "8. PSYCHOLOGICAL HOOK RULE: Do NOT summarize or spoil the ending/secret of the video. Instead, create an intense 'curiosity gap'. The title must be high-clickbait/intriguing to stop users from scrolling, and the description must build sharp suspense, forcing the viewer to watch the video to find the ultimate answer.\n"
+            "9. CHARACTER LIMITS: The 'title' value MUST be punchy and strictly under 60 characters to ensure full visibility in Facebook feeds. The 'description' prose (excluding the hashtags) MUST be concise, fast-reading, and strictly limited to 120 to 200 characters to capture instant attention before the 'See More' button."
         )
         
         chat_input.fill(prompt_text)
         print("[OK] Upgraded prompt text filled", flush=True)
         custom_random_wait(15, 30)
 
-        # 7. Chat submit button click karna (With 5 Retries logic)
+        # 7. Chat submit button click karna (With 5 Retries and Smart Fallbacks)
         print("[STEP] Attempting to click chat submit button...", flush=True)
         submit_clicked = False
         for attempt in range(1, 6):
             try:
+                # 1st Option: test-id selector
                 submit_btn = page.get_by_test_id("chat-submit")
+                
+                # 2nd Option: ARIA structure (Button named 'Submit')
+                submit_btn_fallback = page.get_by_role("button", name="Submit", exact=True)
+                
                 if submit_btn.is_visible():
                     submit_btn.click()
-                    print(f"[OK] Chat submit button clicked on attempt {attempt}", flush=True)
+                    print(f"[OK] Chat submit button (test-id) clicked on attempt {attempt}", flush=True)
+                    submit_clicked = True
+                    break
+                elif submit_btn_fallback.is_visible():
+                    submit_btn_fallback.click()
+                    print(f"[OK] Chat submit button (ARIA Role 'Submit') clicked on attempt {attempt}", flush=True)
                     submit_clicked = True
                     break
                 else:
-                    print(f"[WARNING] Chat submit button not visible (Attempt {attempt}/5)", flush=True)
+                    # 3rd Option: Raw HTML selector fallback
+                    submit_selector = page.locator("button:has-text('Submit'), button[type='submit']")
+                    if submit_selector.first.is_visible():
+                        submit_selector.first.click()
+                        print(f"[OK] Chat submit button (Selector Fallback) clicked on attempt {attempt}", flush=True)
+                        submit_clicked = True
+                        break
+                    else:
+                        print(f"[WARNING] Chat submit button not visible anywhere yet (Attempt {attempt}/5)", flush=True)
             except Exception as e:
                 print(f"[WARNING] Error finding submit button (Attempt {attempt}/5): {e}", flush=True)
             
@@ -309,17 +330,28 @@ def run():
             print(f"[OK] Fresh data successfully saved to '{OUTPUT_JSON_FILE}'.", flush=True)
 
         except Exception as json_err:
-            print(f"[ERROR] JSON parse/save karne mein issue aaya: {json_err}", flush=True)
-            print("Raw text saved as video.txt instead.", flush=True)
-            with open("video.txt", "w", encoding="utf-8") as f:
-                f.write(generated_text)
+            print(f"[CRITICAL ERROR] JSON parse/save karne mein issue aaya: {json_err}", flush=True)
+            print("[SYS EXIT] Exiting immediately with code 1. Pipeline stopped.", flush=True)
+            raise json_err
 
         # 10. Close browser after waiting 15, 30 seconds
         print("[STEP] Final wait before closing browser (15-30s)...", flush=True)
         custom_random_wait(15, 30)
 
     except Exception as e:
-        print("[ERROR]", e, flush=True)
+        print("[FALLBACK] Script mein koi error aaya hai. Backup generic JSON write kar raha hoon...", flush=True)
+        try:
+            fallback_data = {
+                "filename": video_filename if 'video_filename' in locals() else "video.mp4",
+                "title": "Wait For The End! Infact nobody expected this...",
+                "description": "This is hands down the most unbelievable thing on the internet today. Watch closely because you will miss the craziest part if you blink! #viral #trending #unbelievable #mustwatch #insane #epic #wow #exploring #facebookshorts",
+                "keyword": "viralvideo,trending,mustwatch,unbelievable,insane"
+            }
+            with open(OUTPUT_JSON_FILE, "w", encoding="utf-8") as f:
+                json.dump(fallback_data, f, indent=2, ensure_ascii=False)
+            print(f"[OK] Fallback data '{OUTPUT_JSON_FILE.name}' mein successfully save ho gaya.", flush=True)
+        except Exception as write_err:
+            print(f"[CRITICAL ERROR] Fallback write bhi nahi ho paya: {write_err}", flush=True)
 
     finally:
         try:
