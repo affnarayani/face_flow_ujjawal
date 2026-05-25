@@ -331,7 +331,6 @@ def run():
 
         except Exception as json_err:
             print(f"[CRITICAL ERROR] JSON parse/save karne mein issue aaya: {json_err}", flush=True)
-            print("[SYS EXIT] Exiting immediately with code 1. Pipeline stopped.", flush=True)
             raise json_err
 
         # 10. Close browser after waiting 15, 30 seconds
@@ -339,6 +338,7 @@ def run():
         custom_random_wait(15, 30)
 
     except Exception as e:
+        print(f"[CRITICAL RUN ERROR] Script execution failed: {e}", flush=True)
         print("[FALLBACK] Script mein koi error aaya hai. Backup generic JSON write kar raha hoon...", flush=True)
         try:
             fallback_data = {
