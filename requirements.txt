@@ -5,3 +5,5 @@ python-dotenv
 cryptography
 playwright-stealth
 yt-dlp
+opencv-python
+moviepy

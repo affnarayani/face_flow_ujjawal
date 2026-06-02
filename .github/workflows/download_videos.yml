@@ -1,0 +1,80 @@
+name: Download Videos
+
+on:
+  workflow_dispatch: # Sirf manual chalaane ke liye
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  run-downloader:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # =========================
+      # 1. PULL CODE FROM REPO
+      # =========================
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # =========================
+      # 2. SETUP PYTHON ENVIRONMENT
+      # =========================
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      # =========================
+      # 3. INSTALL REQUIRED LIBRARIES
+      # =========================
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install playwright playwright-stealth yt-dlp opencv-python-headless moviepy
+
+      - name: Install Playwright Chromium
+        run: |
+          python -m playwright install chromium
+
+      # =========================
+      # 4. STEP 1: DOWNLOAD VIDEOS
+      # =========================
+      - name: Download YT Videos
+        run: python download_yt_videos.py
+
+      # =========================
+      # 5. STEP 2: CONVERT (WEBM TO MP4)
+      # =========================
+      - name: Convert WebM to MP4
+        run: python convert_to_mp4.py
+
+      # =========================
+      # 6. STEP 3: FILTER & CLEAN
+      # =========================
+      - name: Filter and Clean Videos
+        run: python filter_videos.py
+
+      # =========================
+      # 7. COMMIT & PUSH (PERSISTENCE)
+      # =========================
+      - name: Commit & Push updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 'temp' folder aur 'channels.txt' dono ke changes ko stage karein
+          git add temp/ channels.txt
+          
+          # Check karein agar koi naye changes hain ya nahi
+          if ! git diff --cached --quiet; then
+            git commit -m "Downloaded, converted, and filtered videos successfully [auto]"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "No changes detected. Skipping push."
+          fi

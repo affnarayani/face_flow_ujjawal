@@ -5,7 +5,7 @@ from yt_dlp import YoutubeDL
 from playwright_stealth import Stealth
 
 # ================= CONFIG =================
-CHANNEL_URL = "https://www.youtube.com/@MigEndTwist/shorts"
+CHANNEL_URL = "https://www.youtube.com/@Kaelixcreates/shorts"
 DOWNLOAD_FOLDER = "temp"
 HEADLESS = True
 
@@ -20,7 +20,7 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 # ================= DOWNLOADER =================
 def download_video(video_url):
     ydl_opts = {
-        'format': 'best[ext=mp4]/best',
+        'format': 'bestvideo+bestaudio/best',
         'outtmpl': f'{DOWNLOAD_FOLDER}/%(id)s.%(ext)s',
         'quiet': True,
         'no_warnings': True,
@@ -95,6 +95,34 @@ def run_scraper():
     finally:
         pw_cm.__exit__(None, None, None)
 
+def append_channel_url(url):
+    file_name = "channels.txt"
+    
+    # Check karenge ki file exist karti hai aur khali toh nahi hai
+    is_empty_or_new = True
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        is_empty_or_new = False
+
+    if is_empty_or_new:
+        # Agar file nayi hai ya khali hai, toh direct URL aur newline likh do
+        with open(file_name, "a", encoding="utf-8") as file:
+            file.write(url + "\n")
+    else:
+        # Agar file mein pehle se data hai, toh check karenge ki last character kya hai
+        with open(file_name, "rb+") as file:
+            file.seek(-1, os.SEEK_END)  # Bilkul aakhri character par jayenge
+            last_char = file.read(1)
+            
+            # Agar aakhri character newline (\n) nahi hai, toh pehle newline add karenge
+            if last_char != b'\n':
+                file.write(b'\n')
+        
+        # Ab naye line par safe tareeke se URL append karenge
+        with open(file_name, "a", encoding="utf-8") as file:
+            file.write(url + "\n")
+            
+    print("URL successfully appended to a new line!")
+
 if __name__ == "__main__":
     run_scraper()
-    print("\n🏁 Mission Accomplished!")
+    append_channel_url(CHANNEL_URL)
