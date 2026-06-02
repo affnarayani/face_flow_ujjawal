@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 from playwright.sync_api import sync_playwright
 from yt_dlp import YoutubeDL
 from playwright_stealth import Stealth
@@ -9,13 +10,17 @@ CHANNEL_URL = "https://www.youtube.com/@Kaelixcreates/shorts"
 DOWNLOAD_FOLDER = "temp"
 HEADLESS = True
 
-with open("channels.txt", "r") as f:
-    if any(CHANNEL_URL == line.strip() for line in f):
-        sys.exit("Channel already exists.")
+if os.path.exists("channels.txt"):
+    with open("channels.txt", "r") as f:
+        if any(CHANNEL_URL == line.strip() for line in f):
+            sys.exit("Channel already exists.")
 
 # 1. Folder create karna
-if not os.path.exists(DOWNLOAD_FOLDER):
-    os.makedirs(DOWNLOAD_FOLDER)
+if os.path.exists(DOWNLOAD_FOLDER):
+    print(f"🧹 Clearing old files from '{DOWNLOAD_FOLDER}' folder...")
+    shutil.rmtree(DOWNLOAD_FOLDER)  # Purana folder aur uske andar ki saari files delete ho jayengi
+
+os.makedirs(DOWNLOAD_FOLDER)
 
 # ================= DOWNLOADER =================
 def download_video(video_url):
