@@ -41,7 +41,7 @@ jobs:
       # 4. RUN CONVERSION SCRIPT
       # =========================
       - name: Run WebM to MP4 Converter
-        run: python convert.py
+        run: python convert_to_mp4.py
 
       # =========================
       # 5. COMMIT & PUSH CHANGES (Persistence)
