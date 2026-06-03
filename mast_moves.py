@@ -32,7 +32,7 @@ load_dotenv()
 DECRYPT_KEY = os.getenv("DECRYPT_KEY")
 
 if not DECRYPT_KEY:
-    print("❌ DECRYPT_KEY missing in .env file", flush=True)
+    print("DECRYPT_KEY missing in .env file", flush=True)
     sys.exit(1)
 
 # =========================
@@ -58,7 +58,7 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
     try:
         return aesgcm.decrypt(nonce, ciphertext, None)
     except InvalidTag:
-        print("❌ Decryption failed - Check your DECRYPT_KEY", flush=True)
+        print("Decryption failed - Check your DECRYPT_KEY", flush=True)
         sys.exit(1)
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
@@ -231,7 +231,7 @@ def run():
         except:
             pass
 
-        print("✅ POST SUCCESS", flush=True)
+        print("POST SUCCESS", flush=True)
 
         # Remove video file after success
         try:

@@ -81,7 +81,7 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
     try:
         return aesgcm.decrypt(nonce, ciphertext, None)
     except InvalidTag:
-        raise RuntimeError("❌ Decryption failed (InvalidTag)")
+        raise RuntimeError("Decryption failed (InvalidTag)")
 
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
@@ -166,11 +166,11 @@ def run():
 
         # 2. Videos/ folder mein se random .mp4 select karna
         if not VIDEOS_DIR.exists():
-            raise RuntimeError(f"❌ '{VIDEOS_DIR}' folder nahi mila!")
+            raise RuntimeError(f"'{VIDEOS_DIR}' folder nahi mila!")
         
         mp4_files = list(VIDEOS_DIR.glob("*.mp4"))
         if not mp4_files:
-            raise RuntimeError(f"❌ '{VIDEOS_DIR}' folder mein koi .mp4 file nahi mili!")
+            raise RuntimeError(f"'{VIDEOS_DIR}' folder mein koi .mp4 file nahi mili!")
         
         selected_video = random.choice(mp4_files)
         video_filename = selected_video.name
@@ -258,7 +258,7 @@ def run():
             custom_random_wait(30, 60)
         
         if not submit_clicked:
-            raise RuntimeError("❌ 5 Retries ke baad bhi chat submit button nahi mila.")
+            raise RuntimeError("5 Retries ke baad bhi chat submit button nahi mila.")
 
         # Wait random 30, 60 after successful send
         print("[STEP] Waiting after successful submission (30-60s)...", flush=True)
@@ -305,7 +305,7 @@ def run():
             custom_random_wait(30, 60)
 
         if not output_found:
-            raise RuntimeError("❌ 5 Retries ke baad bhi Grok ka generated JSON output nahi mila.")
+            raise RuntimeError("5 Retries ke baad bhi Grok ka generated JSON output nahi mila.")
 
         # 9. JSON Clean karna aur save karna (Clears previous data automatically)
         print("[STEP] Restructuring and overwriting JSON file...", flush=True)

@@ -73,7 +73,7 @@ def _decrypt_payload(payload: Dict[str, Any], password: str) -> bytes:
     try:
         return aesgcm.decrypt(nonce, ciphertext, None)
     except InvalidTag:
-        raise RuntimeError("❌ Decryption failed (InvalidTag)")
+        raise RuntimeError("Decryption failed (InvalidTag)")
 
 
 def load_cookies(file_path: Path) -> List[Dict[str, Any]]:
@@ -247,7 +247,7 @@ def run():
             print("[STEP] Clicking No WhatsApp...", flush=True)
             time.sleep(random.randint(6, 12))
 
-        print("✅ Posted successfully!", flush=True)
+        print("Posted successfully!", flush=True)
 
         # save
         posted = []
