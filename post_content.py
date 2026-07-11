@@ -23,7 +23,7 @@ from playwright_stealth import Stealth
 # =========================
 HEADLESS = True
 
-FACEBOOK_COOKIES_FILE = "cookies.json.encrypted"
+FACEBOOK_COOKIES_FILE = "fb_cookies.json.encrypted"
 TOPICS_FILE = Path("ujjawal_fb_topics.json")
 POST_FILE = Path("post.json")
 IMAGE_PATH = Path("image/image.png")
