@@ -1,14 +1,14 @@
 {
-    "title": "Smart contracts on blockchain - their legal enforceability in India",
-    "p1": "A contract that executes itself sounds like the future. But can a smart contract actually protect your rights in an Indian court?\n\nMany people assume blockchain code automatically becomes a legally binding agreement.",
-    "p2": "The surprising truth: a smart contract is not the same as a traditional contract. It is simply computer code that performs actions automatically when conditions are met. Its legal value depends on whether it satisfies existing contract laws, such as offer, acceptance, consent, and lawful consideration.",
-    "p3": "In India, electronic agreements can be legally recognized, but the code alone may not answer every legal question. A smart contract used for business should still clearly define the parties, obligations, and dispute resolution process.\n\nThe real power comes from combining blockchain automation with proper legal drafting. This can make transactions faster while keeping legal protection in place.",
-    "conclusion": "Do you think India should create specific laws for smart contracts, or are existing contract laws enough?",
+    "title": "Charge sheet vs final report - what happens after police investigation",
+    "p1": "Many people think every police investigation ends with someone going to trial. It doesn't. The document filed at the end of an investigation can completely change what happens next.",
+    "p2": "A common misconception is that a charge sheet and a final report are the same thing. They aren't. A charge sheet is filed when the police believe the evidence is strong enough to prosecute the accused in court. A final report is filed when the police conclude there isn't enough evidence, no offence is made out, or the case cannot proceed for other legal reasons. The story doesn't always end there, though.",
+    "p3": "Here's the part many people don't know: the court is not bound to simply accept the police's conclusion. A judge can accept a charge sheet and begin the trial, or examine a final report and, in some situations, disagree with it, order further investigation, or take cognizance based on the available material. So the police investigate, but the court still plays an independent role in deciding what comes next. That's why the final document filed after an investigation matters so much.",
+    "conclusion": "Before today, did you think a police final report automatically meant the case was over, or were you aware that a court can sometimes take a different view?",
     "keywords": [
-        "SmartContracts",
-        "BlockchainIndia",
-        "LegalTech",
-        "IndianLaw",
-        "Web3"
+        "LegalAwareness",
+        "CriminalLaw",
+        "KnowYourRights",
+        "PoliceInvestigation",
+        "CourtProcedure"
     ]
 }
