@@ -340,6 +340,32 @@ def run():
     except Exception as e:
         print(f"[CRITICAL RUN ERROR] Script execution failed: {e}", flush=True)
         print("[FALLBACK] Script mein koi error aaya hai. Backup generic JSON write kar raha hoon...", flush=True)
+        if 'page' in locals() and page:
+            try:
+                screenshot_path = "error_screenshot.png"
+                page.screenshot(path=screenshot_path, full_page=True)
+                print(f"[OK] Error screenshot captured: {screenshot_path}", flush=True)
+                
+                imgbb_key = os.getenv("IMGBBB_API_KEY")
+                if imgbb_key:
+                    print("[OK] Uploading screenshot to ImgBB...", flush=True)
+                    url = f"https://api.imgbb.com/1/upload?expiration=86400&key={imgbb_key}"
+                    
+                    with open(screenshot_path, "rb") as file:
+                        response = requests.post(url, files={"image": file})
+                    
+                    if response.status_code == 200:
+                        res_data = response.json()
+                        direct_url = res_data["data"]["display_url"]
+                        print("\n" + "="*50, flush=True)
+                        print(f"👉 DIRECT SCREENSHOT LINK: {direct_url}", flush=True)
+                        print("="*50 + "\n", flush=True)
+                    else:
+                        print(f"[WARNING] ImgBB Upload Failed Status: {response.status_code}", flush=True)
+                else:
+                    print("[WARNING] IMGBBB_API_KEY environment variable not found.", flush=True)
+            except Exception as screenshot_err:
+                print(f"[WARNING] Could not capture or upload screenshot: {screenshot_err}", flush=True)
         try:
             fallback_data = {
                 "filename": video_filename if 'video_filename' in locals() else "video.mp4",
@@ -352,6 +378,8 @@ def run():
             print(f"[OK] Fallback data '{OUTPUT_JSON_FILE.name}' mein successfully save ho gaya.", flush=True)
         except Exception as write_err:
             print(f"[CRITICAL ERROR] Fallback write bhi nahi ho paya: {write_err}", flush=True)
+        
+        sys.exit(1)
 
     finally:
         try:

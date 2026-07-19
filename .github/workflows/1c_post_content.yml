@@ -87,6 +87,7 @@ jobs:
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
         run: python post_content.py
 
       # =========================
