@@ -232,7 +232,8 @@ def run():
             "9. CHARACTER LIMITS: The 'title' value MUST be punchy and strictly under 60 characters to ensure full visibility in Facebook feeds. The 'description' prose (excluding the hashtags) MUST be concise, fast-reading, and strictly limited to 120 to 200 characters to capture instant attention before the 'See More' button."
         )
         
-        chat_input.fill(prompt_text)
+        chat_input.click()
+        page.keyboard.insert_text(prompt_text)
         print("[OK] Upgraded prompt text filled", flush=True)
         custom_random_wait(15, 30)
 
@@ -241,18 +242,21 @@ def run():
         submit_clicked = False
         for attempt in range(1, 6):
             try:
+                # Wait until button is explicitly enabled (not disabled)
+                page.wait_for_selector("button[data-testid='chat-submit']:not([disabled])", timeout=30000)
+                
                 # 1st Option: test-id selector
                 submit_btn = page.get_by_test_id("chat-submit")
                 
                 # 2nd Option: ARIA structure (Button named 'Submit')
                 submit_btn_fallback = page.get_by_role("button", name="Submit", exact=True)
                 
-                if submit_btn.is_visible():
+                if submit_btn.is_visible() and submit_btn.is_enabled():
                     submit_btn.click()
                     print(f"[OK] Chat submit button (test-id) clicked on attempt {attempt}", flush=True)
                     submit_clicked = True
                     break
-                elif submit_btn_fallback.is_visible():
+                elif submit_btn_fallback.is_visible() and submit_btn_fallback.is_enabled():
                     submit_btn_fallback.click()
                     print(f"[OK] Chat submit button (ARIA Role 'Submit') clicked on attempt {attempt}", flush=True)
                     submit_clicked = True
@@ -260,15 +264,26 @@ def run():
                 else:
                     # 3rd Option: Raw HTML selector fallback
                     submit_selector = page.locator("button:has-text('Submit'), button[type='submit']")
-                    if submit_selector.first.is_visible():
+                    if submit_selector.first.is_visible() and submit_selector.first.is_enabled():
                         submit_selector.first.click()
                         print(f"[OK] Chat submit button (Selector Fallback) clicked on attempt {attempt}", flush=True)
                         submit_clicked = True
                         break
                     else:
-                        print(f"[WARNING] Chat submit button not visible anywhere yet (Attempt {attempt}/5)", flush=True)
+                        print(f"[WARNING] Chat submit button not visible/enabled anywhere yet (Attempt {attempt}/5)", flush=True)
             except Exception as e:
                 print(f"[WARNING] Error finding submit button (Attempt {attempt}/5): {e}", flush=True)
+                # Fallback check using Keyboard Enter
+                try:
+                    chat_input.focus()
+                    page.keyboard.press("Enter")
+                    time.sleep(3)
+                    if not page.get_by_test_id("chat-submit").is_visible() or page.get_by_test_id("chat-submit").is_disabled():
+                        submit_clicked = True
+                        print(f"[OK] Submitted via keyboard Enter on attempt {attempt}", flush=True)
+                        break
+                except Exception:
+                    pass
             
             print(f"[RETRY] Waiting before next try...", flush=True)
             custom_random_wait(30, 60)
