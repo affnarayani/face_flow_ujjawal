@@ -1,8 +1,9 @@
-name: Mast Moves Post
+name: 4A. Get Video Details
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: '40 12 * * *'
+    - cron: '58 4 * * *'
   workflow_dispatch:
 
 env:
@@ -15,25 +16,52 @@ jobs:
       contents: write
 
     steps:
-      # =========================
-      # 1. PULL CODE
-      # =========================
       - name: Checkout repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
-      # =========================
-      # 2. SETUP PYTHON
-      # =========================
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
-      # =========================
-      # 3. INSTALL DEPENDENCIES
-      # =========================
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Pull Latest Changes (Maintain Persistence)
+        run: |
+          git pull origin ${GITHUB_REF_NAME} --rebase
+
+      - name: Install and Start Cloudflare WARP (TUN Global Mode)
+        run: |
+            # 1. Repository aur GPG Key set karein
+            curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg | sudo gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-client.list
+            
+            # 2. Install
+            sudo apt-get update && sudo apt-get install -y cloudflare-warp
+            
+            # 3. Start Service
+            sudo systemctl start warp-svc
+            sleep 2
+            
+            # 4. Register (New CLI Syntax compatible)
+            warp-cli --accept-tos registration new || warp-cli registration new
+            
+            # 5. STRICT FIX: Mode ko PROXY se badal kar TUN (Standard VPN) karein
+            # Yeh pure GitHub runner ka internet traffic WARP se routing kar dega
+            warp-cli --accept-tos mode warp || warp-cli mode warp
+            
+            # 6. Connect
+            warp-cli --accept-tos connect || warp-cli connect
+            sleep 5
+            
+            # 7. Verify ki pure system ka IP change hua ya nahi
+            curl https://cloudflare.com/cdn-cgi/trace
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
@@ -43,9 +71,6 @@ jobs:
         run: |
           python -m playwright install chromium
 
-      # =========================
-      # 4. GENERATE VIDEO DETAILS (GROK BOT)
-      # =========================
       - name: Generate Video Details
         env:
           DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
@@ -60,26 +85,6 @@ jobs:
           path: error_screenshot.png
           if-no-files-found: ignore
 
-      # =========================
-      # 5. RUN FACEBOOK BOT
-      # =========================
-      - name: Run Facebook Bot
-        env:
-          DECRYPT_KEY: ${{ secrets.DECRYPT_KEY }}
-          IMGBBB_API_KEY: ${{ secrets.IMGBBB_API_KEY }}
-        run: python mast_moves.py
-
-      - name: Upload Error Screenshot
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: error-screenshot-mast
-          path: error_screenshot.png
-          if-no-files-found: ignore
-
-      # =========================
-      # 6. COMMIT & PUSH CHANGES
-      # =========================
       - name: Commit & Push updates
         run: |
           git config --global user.name "github-actions[bot]"
