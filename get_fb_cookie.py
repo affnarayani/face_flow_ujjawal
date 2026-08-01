@@ -71,7 +71,7 @@ def save_cookies(context):
 # -------------------- LOGIN --------------------
 def perform_login(page, email, password):
     page.goto(FACEBOOK_URL, wait_until="domcontentloaded")
-
+    time.sleep(random.uniform(6, 12))
     page.get_by_role("textbox", name="Email address or mobile number").fill(email)
     time.sleep(random.uniform(6, 12))
     page.get_by_role("textbox", name="Password").fill(password)
