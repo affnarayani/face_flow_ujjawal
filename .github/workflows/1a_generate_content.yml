@@ -2,8 +2,8 @@ name: 1A. Generate Content
 
 on:
   schedule:
-    - cron: '51 4 * * *'
-    - cron: '0 13 * * *'
+    - cron: '47 15 * * *'
+    - cron: '5 4 * * *'
   workflow_dispatch:
 
 env:
