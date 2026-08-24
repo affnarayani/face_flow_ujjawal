@@ -2,8 +2,8 @@ name: 4A. Get Video Details
 
 on:
   schedule:
-    - cron: '27 13 * * *'
-    - cron: '58 21 * * *'
+    - cron: '32 10 * * *'
+    - cron: '44 8 * * *'
   workflow_dispatch:
 
 env:
