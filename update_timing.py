@@ -48,4 +48,3 @@ def update_cron_times(file_path, n):
 
 if __name__ == "__main__":
     update_cron_times('.github/workflows/1a_generate_content.yml', 2)
-    update_cron_times('.github/workflows/4a_get_video_details.yml', 2)
