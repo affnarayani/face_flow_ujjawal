@@ -1,14 +1,14 @@
 {
-    "title": "Lump sum vs monthly alimony - which works better for clients",
-    "p1": "A bigger alimony amount does not always mean a better outcome.\n\nFor many clients, the real question is not simply “How much?” but “How should it be paid?”",
-    "p2": "A common misconception is that monthly alimony is automatically safer because it provides regular financial support. Not necessarily.\n\nA lump-sum settlement can offer certainty and a clean financial break, while monthly payments may provide ongoing support when the recipient needs a steady income.",
-    "p3": "The choice can depend on factors such as income stability, future financial needs, tax consequences, enforcement concerns, and the ability of the paying spouse to meet long-term obligations.\n\nOne useful insight: a monthly award can look attractive on paper but become difficult if circumstances change or payments are delayed. A lump sum may reduce that uncertainty, but it also means giving up the security of future payments.\n\nThe better option is usually the one that matches the client's actual financial risk—not simply the option with the higher headline figure.",
-    "conclusion": "If you were advising a client, would you prefer the certainty of a lump sum or the ongoing security of monthly alimony—and why?",
+    "title": "Cyber insurance claims - what policies actually cover",
+    "p1": "Think cyber insurance pays for anything that happens after a data breach? That assumption can turn a bad incident into an expensive surprise.",
+    "p2": "Cyber policies can cover very different losses depending on the wording. Some may pay for breach investigation, legal costs, customer notification, data recovery, business interruption, ransomware response, or certain liability claims. But having a policy does not automatically mean every cyber-related loss is covered.",
+    "p3": "One detail many people miss: the cause of the incident can matter as much as the damage. A policy might respond to a network attack but have exclusions, conditions, or limits for social engineering fraud, unapproved payments, outdated security practices, or certain types of regulatory penalties. Coverage may also depend on whether the business followed the security controls it promised when buying the policy.\n\nThe practical takeaway? Don't judge cyber insurance by its headline coverage limit. Check what triggers coverage, what is excluded, the sub-limits, deductibles, and the obligations you must meet after an incident.",
+    "conclusion": "If your business had a cyber incident tomorrow, would you know exactly which losses your policy would actually reimburse?",
     "keywords": [
-        "Alimony",
-        "FamilyLaw",
-        "DivorceLaw",
-        "Maintenance",
-        "LegalAwareness"
+        "CyberInsurance",
+        "CyberSecurity",
+        "InsuranceClaims",
+        "DataBreach",
+        "RiskManagement"
     ]
 }
