@@ -558,7 +558,10 @@
         "posted": true
     },
     {
-        "topic": "Marital rape exception - where the law stands today"
+        "topic": "Marital rape exception - where the law stands today",
+        "content_generated": true,
+        "image_generated": false,
+        "posted": false
     },
     {
         "topic": "Founder vs investor equity disputes in startups"
