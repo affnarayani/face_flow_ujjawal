@@ -1,7 +1,7 @@
 name: 3A. Convert Videos
 
 on:
-  workflow_dispatch: # Sirf manual run karne ke liye (No cron/schedule)
+  workflow_dispatch: # Manual run only (No cron/schedule)
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install moviepy
+          pip install -r requirements.txt
 
       # =========================
       # 4. RUN CONVERSION SCRIPT
