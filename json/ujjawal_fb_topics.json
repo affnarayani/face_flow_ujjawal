@@ -630,7 +630,10 @@
         "posted": true
     },
     {
-        "topic": "Fixed term employment - rights compared to permanent employees"
+        "topic": "Fixed term employment - rights compared to permanent employees",
+        "content_generated": true,
+        "image_generated": false,
+        "posted": false
     },
     {
         "topic": "Marriage registration - legal benefits people often overlook"
