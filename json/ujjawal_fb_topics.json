@@ -642,7 +642,10 @@
         "posted": true
     },
     {
-        "topic": "Minority shareholder remedies against oppression and mismanagement"
+        "topic": "Minority shareholder remedies against oppression and mismanagement",
+        "content_generated": true,
+        "image_generated": false,
+        "posted": false
     },
     {
         "topic": "The sanction requirement before prosecuting a public servant for corruption"
