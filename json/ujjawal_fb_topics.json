@@ -678,7 +678,10 @@
         "posted": true
     },
     {
-        "topic": "Interim relief during a pending inquiry - transfer and leave options"
+        "topic": "Interim relief during a pending inquiry - transfer and leave options",
+        "content_generated": true,
+        "image_generated": false,
+        "posted": false
     },
     {
         "topic": "AI training data and copyright infringement disputes"
