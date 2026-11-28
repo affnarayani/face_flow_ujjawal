@@ -1,14 +1,14 @@
 {
-    "title": "Confession recorded by NDPS officers - admissibility after recent rulings",
-    "p1": "Can a confession recorded by a Narcotics Control Bureau officer send someone to prison? The Supreme Court's answer may surprise you.\n\nMany people assume that if an accused voluntarily admits involvement in a drug-related offence before an NDPS officer, that statement can automatically be used as evidence.",
-    "p2": "But the law says otherwise.\n\nIn Tofan Singh v. State of Tamil Nadu (2020), the Supreme Court settled a crucial question: officers empowered under Section 53 of the NDPS Act are treated as police officers for this purpose. Consequently, a confession made to them is barred under Section 25 of the Evidence Act.\n\nMore importantly, a statement recorded under Section 67 of the NDPS Act cannot be used as a confessional statement to convict an accused.",
-    "p3": "The Supreme Court reaffirmed this position in subsequent decisions, including Rajkumar Hariram Gameti v. State of Gujarat (2024).\n\nHere's the practical takeaway: signing a statement or allegedly admitting guilt before an NDPS officer does not automatically make that confession admissible in court. The prosecution must establish its case through legally admissible evidence, not simply rely on a Section 67 confession.\n\nThis distinction can make a significant difference in criminal trials.",
-    "conclusion": "Do you think excluding confessions recorded by NDPS officers provides an essential safeguard against forced admissions, or does it make drug-related investigations more difficult? Share your perspective.",
+    "title": "Hearsay evidence exceptions - when courts actually admit it",
+    "p1": "Can a court accept something someone said outside the courtroom as evidence?\n\nSurprisingly, yes. And sometimes, that statement can make a significant difference to the outcome of a case.",
+    "p2": "Many people assume hearsay is always inadmissible. That's a misconception.\n\nHearsay generally means a statement made outside court that is presented to prove that what the speaker said was true. Courts are cautious about it because the original speaker may not be available for questioning.\n\nBut there are exceptions.",
+    "p3": "For example, a person's statement about an event made while it was happening may sometimes be admitted because it was made under the pressure of the moment, leaving little opportunity to fabricate.\n\nSimilarly, certain dying declarations, business records, and statements against a person's own interests may qualify under applicable evidence laws.\n\nHere's the surprising insight: A statement doesn't become reliable merely because someone repeats it in court. The circumstances in which it was originally made can determine whether an exception applies.\n\nThe practical takeaway? Never dismiss a piece of evidence simply because it involves something someone said outside court. Examine the circumstances, the applicable exception, and the legal requirements.",
+    "conclusion": "Should courts admit an out-of-court statement if the circumstances strongly suggest it is reliable, even when the original speaker cannot be cross-examined? What's your view?",
     "keywords": [
-        "NDPSAct",
-        "TofanSingh",
-        "CriminalLaw",
+        "HearsayEvidence",
         "EvidenceLaw",
-        "LegalAwareness"
+        "LegalAwareness",
+        "RulesOfEvidence",
+        "JudicialProcess"
     ]
 }
