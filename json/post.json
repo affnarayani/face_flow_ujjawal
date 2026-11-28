@@ -1,14 +1,14 @@
 {
-    "title": "Hearsay evidence exceptions - when courts actually admit it",
-    "p1": "Can a court accept something someone said outside the courtroom as evidence?\n\nSurprisingly, yes. And sometimes, that statement can make a significant difference to the outcome of a case.",
-    "p2": "Many people assume hearsay is always inadmissible. That's a misconception.\n\nHearsay generally means a statement made outside court that is presented to prove that what the speaker said was true. Courts are cautious about it because the original speaker may not be available for questioning.\n\nBut there are exceptions.",
-    "p3": "For example, a person's statement about an event made while it was happening may sometimes be admitted because it was made under the pressure of the moment, leaving little opportunity to fabricate.\n\nSimilarly, certain dying declarations, business records, and statements against a person's own interests may qualify under applicable evidence laws.\n\nHere's the surprising insight: A statement doesn't become reliable merely because someone repeats it in court. The circumstances in which it was originally made can determine whether an exception applies.\n\nThe practical takeaway? Never dismiss a piece of evidence simply because it involves something someone said outside court. Examine the circumstances, the applicable exception, and the legal requirements.",
-    "conclusion": "Should courts admit an out-of-court statement if the circumstances strongly suggest it is reliable, even when the original speaker cannot be cross-examined? What's your view?",
+    "title": "Phishing attacks - bank liability under RBI guidelines",
+    "p1": "Lost money to a phishing scam? Your bank may be responsible for the loss, even if the transaction happened through your own account.\n\nBut there is one crucial detail most people overlook: how quickly you report the fraud can determine whether you get your money back.",
+    "p2": "Many people assume that once they share an OTP or click a fake banking link, the bank has no responsibility.\n\nThat is not always true.\n\nUnder RBI guidelines, customers can have zero liability for unauthorized electronic transactions if the fraud resulted from the bank's negligence or a system deficiency. Even where a third-party breach occurs, prompt reporting can protect customers from financial liability.",
+    "p3": "Here is the practical rule:\n\nIf an unauthorized transaction occurs, report it to your bank immediately and through its official channels. Under RBI rules, reporting within three working days of receiving the bank's transaction communication can qualify you for zero liability in certain third-party breach cases.\n\nIf you shared confidential credentials through negligence, you may bear the loss until you report it. Transactions occurring after reporting are generally the bank's responsibility.\n\nAlso, banks are required to provide a shadow reversal within 10 working days of notification in qualifying cases.",
+    "conclusion": "If someone tricks you into revealing an OTP through a fake banking website, should the bank automatically escape liability? What do you think?",
     "keywords": [
-        "HearsayEvidence",
-        "EvidenceLaw",
-        "LegalAwareness",
-        "RulesOfEvidence",
-        "JudicialProcess"
+        "PhishingAwareness",
+        "RBIGuidelines",
+        "BankingFraud",
+        "CyberSecurity",
+        "ConsumerRights"
     ]
 }

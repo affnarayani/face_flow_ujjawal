@@ -708,7 +708,10 @@
         "posted": true
     },
     {
-        "topic": "Phishing attacks - bank liability under RBI guidelines"
+        "topic": "Phishing attacks - bank liability under RBI guidelines",
+        "content_generated": true,
+        "image_generated": false,
+        "posted": false
     },
     {
         "topic": "Criminal conspiracy - why it remains one of the hardest charges to prove"
